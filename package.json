@@ -1,0 +1,26 @@
+{
+	"name": "lolq-server",
+	"productName": "LoLQ Server",
+	"description": "LoLQ API proxy and data server",
+	"version": "0.1.0",
+	"author": "Riku Nurminen <ric@lolq.org>",
+	"homepage": "https://www.lolq.org",
+	"license": "GPL-3.0-or-later",
+	"main": "lolq-server.js",
+	"dependencies": {
+			"async": "^2.6.1",
+			"express": "^4.16.3",
+			"helmet": "^3.12.0",
+			"kayn": "^0.8.12",
+			"mysql": "^2.15.0",
+			"redis": "^2.8.0"
+	},
+	"nodemonConfig": {
+			"delay": "2500",
+			"ignore": [
+					"LOLQ-LICENSE.txt",
+					"championData/*",
+					"node-modules/*"
+			]
+	}
+}
