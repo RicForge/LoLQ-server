@@ -745,7 +745,9 @@ function _readChampionData(cb) {
 
 	let error = false
 
-	_lolqLog('[blue][bright]_readChampionData(): Updating champion datasets to memory[reset]')
+	if(process.env.LOLQ_DEV) {
+		_lolqLog('[blue][bright]_readChampionData(): Updating champion datasets to memory[reset]')
+	}
 
 	async.forEachOfSeries(elos, function (elo, idx, callback) {
 		let file = path.join(CHAMPIONDATA_DIR, 'championGG_dataset_' + elo + '.json')
