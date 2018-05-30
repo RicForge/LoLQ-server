@@ -363,11 +363,11 @@ function shutdownServer() {
 		})
 	}
 
-	// Quit after 5 seconds
+	// Quit after 3 seconds
 	setTimeout(() => {
 		_endLogging()
 		process.exit(0)
-	}, 5000)
+	}, 3000)
 }
 
 
@@ -458,7 +458,9 @@ function _getLeaguesBySummonerId(req, res) {
 				// Found in memcache
 				res.json(JSON.parse(reply))
 				_incrementMemCacheHits(id)
-				_lolqLog('[green]_getLeaguesBySummonerId():[reset] [yellow](MEM CACHE HIT)[reset] [green]response for ' + region + '/' + summonerId + ' to ' + ip + '[reset]', 1)
+				if(process.env.LOLQ_DEV) {
+					_lolqLog('[green]_getLeaguesBySummonerId():[reset] [yellow](MEM CACHE HIT)[reset] [green]response for ' + region + '/' + summonerId + ' to ' + ip + '[reset]', 1)
+				}
 			} else {
 				// Not found in memcache, request from Riot API
 				g_kayn.LeaguePositions.by.summonerID(summonerId).region(region).callback(function(err, leagues) {
@@ -467,7 +469,9 @@ function _getLeaguesBySummonerId(req, res) {
 					} else {
 						let leaguesMinified = _minifyLeaguesData(leagues)
 						res.json(leaguesMinified)
-						_lolqLog('[green]_getLeaguesBySummonerId(): response for ' + region + '/' + summonerId + ' to ' + ip + '[reset]', 1)
+						if(process.env.LOLQ_DEV) {
+							_lolqLog('[green]_getLeaguesBySummonerId(): response for ' + region + '/' + summonerId + ' to ' + ip + '[reset]', 1)
+						}
 						_addToMemCache(cacheKey, JSON.stringify(leaguesMinified), MEMCACHE_LEAGUES_EXPIRE)
 					}
 
@@ -505,7 +509,9 @@ function _getMatchlistByAccountId(req, res) {
 				// Found in memcache
 				res.json(JSON.parse(reply))
 				_incrementMemCacheHits(id)
-				_lolqLog('[green]_getMatchlistByAccountId():[reset] [yellow](MEM CACHE HIT)[reset] [green]response for ' + region + '/' + accountId + ' to ' + ip + '[reset]', 1)
+				if(process.env.LOLQ_DEV) {
+					_lolqLog('[green]_getMatchlistByAccountId():[reset] [yellow](MEM CACHE HIT)[reset] [green]response for ' + region + '/' + accountId + ' to ' + ip + '[reset]', 1)
+				}
 			} else {
 				// Not found in memcache, request from Riot API
 				g_kayn.Matchlist.by.accountID(accountId).region(region).callback(function(err, matchlist) {
@@ -514,7 +520,9 @@ function _getMatchlistByAccountId(req, res) {
 					} else {
 						let matchlistMinified = _minifyMatchlistData(matchlist)
 						res.json(matchlistMinified)
-						_lolqLog('[green]_getMatchlistByAccountId(): response for ' + region + '/' + accountId + ' to ' + ip + '[reset]', 1)
+						if(process.env.LOLQ_DEV) {
+							_lolqLog('[green]_getMatchlistByAccountId(): response for ' + region + '/' + accountId + ' to ' + ip + '[reset]', 1)
+						}
 						_addToMemCache(cacheKey, JSON.stringify(matchlistMinified), MEMCACHE_MATCHLIST_EXPIRE)
 					}
 
@@ -550,7 +558,9 @@ function _getMatchByGameId(req, res) {
 				// Matchdata found in DB cache
 				res.json(jsonData)
 				_incrementDbCacheHits(id)
-				_lolqLog('[green]_getMatchByGameId():[reset] [cyan](DB CACHE HIT)[reset] [green]response for ' + region + '/' + gameId + ' to ' + ip + '[reset]', 1)
+				if(process.env.LOLQ_DEV) {
+					_lolqLog('[green]_getMatchByGameId():[reset] [cyan](DB CACHE HIT)[reset] [green]response for ' + region + '/' + gameId + ' to ' + ip + '[reset]', 1)
+				}
 			} else {
 				// Matchdata not in DB cache, request from Riot API
 				g_kayn.Match.get(gameId).region(region).callback(function(err2, matchinfo) {
@@ -561,7 +571,9 @@ function _getMatchByGameId(req, res) {
 						let matchMinified = _minifyMatchData(matchinfo)
 						res.json(matchMinified)
 						_addMatchdataToDBCache(region, gameId, matchMinified)
-						_lolqLog('[green]_getMatchByGameId(): response for ' + region + '/' + gameId + ' to ' + ip + '[reset]', 1)
+						if(process.env.LOLQ_DEV) {
+							_lolqLog('[green]_getMatchByGameId(): response for ' + region + '/' + gameId + ' to ' + ip + '[reset]', 1)
+						}
 					}
 		
 					_incrementRiotApiRequests(id)
